@@ -1,0 +1,48 @@
+This is a Renderer project and contains several classes
+
+1. Renderer.java
+task: main class
+aim: to create the main class for this program and to initialize every class
+future implementation: to implement object creation
+variables:
+    Width: stores the width of the screen
+    Height: stores the height of the screen
+    viewFrom: the view vector for the calculation
+    viewTo: the vector that people will view to
+    initializeData: this is the data that initialize the objManager class, contains the data for all of the objects
+    colors: contains all the colors for the objects, implement texture pack in future
+    screenObject: an instance of objManager that is mainly used for control
+
+2. objManager.java
+task: to manage all of the 3d objects and call the main loop that refresh and calculates the projection of the objects
+aim: to manage objects and every thing together
+future implementation: to implement triangulation method and probably ray tracing
+    variables:
+    numObjects: this is the number of objects that is stored
+    objects: this is a list that stores all the instances of threeDObj
+
+3. threeDObj.java
+task: to manage the data for each 3d object such as the coordinates for the points
+aim: to act as a small storage class that stores information about the object
+future implementation: to create texture class and combine both class to define a 3d object
+variables:
+    data: this is the data for the object
+    numPoly: this is the number of polygon that compose the object
+    color: the color of your objects
+    computedPoints: the computed points of your object
+
+4. calculator.java
+task: to turn 3d coordinates into 2d coordinates based on viewTo and viewFrom vector
+aim: a static class that needs input and output and gives an output
+future implementation: to solve existing bugs about some translation
+variable: there isn't any true variable because this is only just a calculator for the program
+
+5.Vector.java
+task: this is a 3d vector class that stores the value of points
+aim: to act as a storage and provide calculations of the dot product
+future implementation: no improvements
+variable: there isn't any true variable because this is only just a storage of a vector for the object
+
+conclusions:
+The renderer works now but lacks further implementations, such as triangulation and 3d object creation.
+This will all be implemented in future classes.
