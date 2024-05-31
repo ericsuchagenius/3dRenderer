@@ -37,45 +37,16 @@ public class objManager extends JPanel implements KeyListener, ActionListener {
         g2d.clearRect(0, 0, 2000, 1200);
         for (threeDObj currObj : objects) {
             currObj.computePoints();
-            for (List<List<Double>> polygon : currObj.computedPoints) {
-
-                //implementing double drawing
-                Path2D path = new Path2D.Double();
-                path.moveTo(polygon.get(0).get(0), polygon.get(0).get(1));
-                for(int i = 1; i<polygon.size();i++){
-                    path.lineTo(polygon.get(i).get(0), polygon.get(i).get(1));
-                }
-                path.closePath();
-                g2d.setPaint(Color.BLACK);
-                g2d.draw(path);
-                g2d.setPaint(currObj.color);
-                g2d.fill(path);
+        }
+        for(threeDObj currObj: objects){
+            for(Polygon Poly: currObj.drawPoly){
+                g.setColor(Color.BLACK);
+                g.drawPolygon(Poly);
+//                g.setColor(currObj.color); // to implement this method you need to finish the each shape distance calulation
+//                g.fillPolygon(Poly);
             }
         }
 //    drawAxes(g2d);// random axis drawing function
-    }
-    private void drawAxes(Graphics2D g2) {
-        double[][] axes = {
-                {0, 0, 0}, {100, 0, 0},  // X axis from (0,0,0) to (100,0,0)
-                {0, 0, 0}, {0, 100, 0},  // Y axis from (0,0,0) to (0,100,0)
-                {0, 0, 0}, {0, 0, 100}   // Z axis from (0,0,0) to (0,0,100)
-        };
-
-        for (int i = 0; i < axes.length; i += 2) {
-            double[] from = axes[i];
-            double[] to = axes[i + 1];
-
-            int x1 = (int) calculator.CalculatotposX(Renderer.viewFrom, Renderer.viewTo, from[0], from[1], from[2]);
-            int y1 = (int) calculator.CalculatotposY(Renderer.viewFrom, Renderer.viewTo, from[0], from[1], from[2]);
-            int x2 = (int) calculator.CalculatotposX(Renderer.viewFrom, Renderer.viewTo, to[0], to[1], to[2]);
-            int y2 = (int) calculator.CalculatotposY(Renderer.viewFrom, Renderer.viewTo, to[0], to[1], to[2]);
-
-            x1 = (int) reposition.repositon_2dX((double)x1);
-            y1 = (int) reposition.repositon_2dX((double)y1);
-            x2 = (int) reposition.repositon_2dX((double)x2);
-            y2 = (int) reposition.repositon_2dX((double)y2);
-            g2.drawLine(x1, y1, x2, y2);
-        }
     }
 
     @Override
@@ -92,16 +63,22 @@ public class objManager extends JPanel implements KeyListener, ActionListener {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_A) {
-            Renderer.viewFrom[0]-=0.2;
+            Renderer.viewFrom[0]-=15;
         }
         if (key == KeyEvent.VK_D) {
-            Renderer.viewFrom[0]+=0.2;
+            Renderer.viewFrom[0]+=15;
         }
         if (key == KeyEvent.VK_W) {
-            Renderer.viewFrom[1]+=0.2;
+            Renderer.viewFrom[1]+=15;
         }
         if (key == KeyEvent.VK_S) {
-            Renderer.viewFrom[1]-=0.2;
+            Renderer.viewFrom[1]-=15;
+        }
+        if (key == KeyEvent.VK_UP) {
+            Renderer.viewFrom[1]+=15;
+        }
+        if (key == KeyEvent.VK_DOWN) {
+            Renderer.viewFrom[1]-=15;
         }
         refresh(); // Call refresh to repaint the panel
     }

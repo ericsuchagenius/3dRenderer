@@ -1,33 +1,57 @@
-public class calculator { //static reference of the methods
-    static double CalculatotposX(double[] Viewfrom, double[] Viewto, double x,double y,double z){
-        return calculator.setStuff(Viewfrom,Viewto,x,y,z,true);
+
+public class calculator {
+    static double DrawX = 0, DrawY = 0;
+
+    static double calculatePositionX(double[] ViewFrom, double[] ViewTo, double x, double y, double z) {
+        setStuff(ViewFrom, ViewTo, x, y, z);
+        return DrawX;
     }
-    static double CalculatotposY(double[] Viewfrom, double[] Viewto, double x,double y,double z){
-        return calculator.setStuff(Viewfrom,Viewto,x,y,z, false);
+
+    static double calculatePositionY(double[] ViewFrom, double[] ViewTo, double x, double y, double z) {
+        setStuff(ViewFrom, ViewTo, x, y, z);
+        return DrawY;
     }
-    private static double setStuff(double[] ViewFrom, double[] ViewTo, double x, double y, double z, boolean isX){
-        Vector viewVector = new Vector(ViewTo[0]-ViewFrom[0], ViewTo[1]-ViewFrom[1], ViewTo[2]-ViewFrom[2]);
-        Vector dirVector = new Vector(1,1,1);
-        Vector Planeventor1 = viewVector.CrossProduct(dirVector);
-        Vector Planeventor2 = viewVector.CrossProduct(Planeventor1);
 
-        Vector ViewToPoint  = new Vector(x-ViewFrom[0], y-ViewFrom[1],z-ViewFrom[2]);
+    static void setStuff(double[] ViewFrom, double[] ViewTo, double x, double y, double z) {
+        Vector ViewVector = new Vector(ViewTo[0] - ViewFrom[0], ViewTo[1] - ViewFrom[1], ViewTo[2] - ViewFrom[2]);
+        Vector DirectionVector = new Vector(1, 1, 1);
+        Vector PlaneVector1 = ViewVector.CrossProduct(DirectionVector);
+        Vector PlaneVector2 = ViewVector.CrossProduct(PlaneVector1);
 
-        double t = (viewVector.x*ViewTo[0]+viewVector.y*ViewTo[1]+viewVector.z*ViewTo[2])
-                - (viewVector.x*ViewFrom[0]+viewVector.y*ViewFrom[1]+viewVector.z*ViewFrom[2])
-                / (viewVector.x*ViewToPoint.x+viewVector.y*ViewToPoint.y+viewVector.z*ViewToPoint.z);
+        Vector RotationVector = GetRotationVector(ViewFrom, ViewTo);
+        Vector WeirdVector1 = ViewVector.CrossProduct(RotationVector);
+        Vector WeirdVector2 = ViewVector.CrossProduct(WeirdVector1);
 
-        x = ViewFrom[0] * ViewToPoint.x*t;
-        y = ViewFrom[1] * ViewToPoint.y*t;
-        z = ViewFrom[2] * ViewToPoint.z*t;
+        Vector ViewToPoint = new Vector(x - ViewFrom[0], y - ViewFrom[1], z - ViewFrom[2]);
 
-        if (t>=0){
-            if(isX){
-                return Planeventor2.x*x + Planeventor2.y*y +Planeventor2.z*z;
-            }
-            return Planeventor1.x*x + Planeventor1.y*y +Planeventor1.z*z;
+        double t = (ViewVector.x * ViewTo[0] + ViewVector.y * ViewTo[1] + ViewVector.z * ViewTo[2]
+                - (ViewVector.x * ViewFrom[0] + ViewVector.y * ViewFrom[1] + ViewVector.z * ViewFrom[2]))
+                / (ViewVector.x * ViewToPoint.x + ViewVector.y * ViewToPoint.y + ViewVector.z * ViewToPoint.z);
+
+        x = ViewFrom[0] + ViewToPoint.x * t;
+        y = ViewFrom[1] + ViewToPoint.y * t;
+        z = ViewFrom[2] + ViewToPoint.z * t;
+
+        if (t > 0) {
+            DrawX = WeirdVector2.x * x + WeirdVector2.y * y + WeirdVector2.z * z;
+            DrawY = WeirdVector1.x * x + WeirdVector1.y * y + WeirdVector1.z * z;
         }
-        return -1;
+    }
 
+    static Vector GetRotationVector ( double[] ViewFrom, double[] ViewTo){
+        double dx = Math.abs(ViewFrom[0] - ViewTo[0]);
+        double dy = Math.abs(ViewFrom[1] - ViewTo[1]);
+        double xRot, yRot;
+
+        xRot = dy / (dx + dy);
+        yRot = dx / (dx + dy);
+
+        if (ViewFrom[1] > ViewTo[1])
+            xRot = -xRot;
+        if (ViewFrom[0] < ViewTo[0])
+            yRot = -yRot;
+
+        Vector V = new Vector(xRot, yRot, 0);
+        return V;
     }
 }
