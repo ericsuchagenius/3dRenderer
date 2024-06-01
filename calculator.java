@@ -32,7 +32,7 @@ public class calculator {
         y = ViewFrom[1] + ViewToPoint.y * t;
         z = ViewFrom[2] + ViewToPoint.z * t;
 
-        if (t > 0) {
+        if (t >= 0) {
             DrawX = WeirdVector2.x * x + WeirdVector2.y * y + WeirdVector2.z * z;
             DrawY = WeirdVector1.x * x + WeirdVector1.y * y + WeirdVector1.z * z;
         }

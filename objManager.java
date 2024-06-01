@@ -32,18 +32,23 @@ public class objManager extends JPanel implements KeyListener, ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        //updating the shapes
         g.drawString(currentTimeMillis()+"",20,20);
         Graphics2D g2d = (Graphics2D) g;
         g2d.clearRect(0, 0, 2000, 1200);
+
         for (threeDObj currObj : objects) {
-            currObj.computePoints();
+            currObj.refreshPoly();
         }
+
+        //drawing the shapes
         for(threeDObj currObj: objects){
             for(Polygon Poly: currObj.drawPoly){
                 g.setColor(Color.BLACK);
-                g.drawPolygon(Poly);
-//                g.setColor(currObj.color); // to implement this method you need to finish the each shape distance calulation
-//                g.fillPolygon(Poly);
+                g.drawPolygon(Poly);// draw poly is the list that stores the polygons, and by using a index that is uniform with the input data and by sorting the distance withe the hash map and the list, we could achieve
+                g.setColor(currObj.color); // to implement this method you need to finish the each shape distance calulation
+                g.fillPolygon(Poly);
             }
         }
 //    drawAxes(g2d);// random axis drawing function
