@@ -32,24 +32,25 @@ public class threeDObj {
             data.add(tempPoly);
         }
         this.color = color;
-
+        this.computePoints();
         this.refreshPoly();
     }
 
     public void refreshPoly(){
         this.computePoints();
         this.computeDistance();
+
     }
 
     private void computePoints() { // basically like the reading part except there's an additional computing process and only two values in the 4th layer
         drawPoly.clear();
+        double dx = -50*calculator.calculatePositionX(Renderer.viewFrom, Renderer.viewTo, Renderer.viewTo[0], Renderer.viewTo[1], Renderer.viewTo[2]);
+        double dy = -50*calculator.calculatePositionY(Renderer.viewFrom, Renderer.viewTo, Renderer.viewTo[0], Renderer.viewTo[1], Renderer.viewTo[2]);
         for (int i = 0; i < numPoly; i++) {
             Polygon P = new Polygon();
             for (int j = 0; j < data.get(i).size(); j++) {
-                double x = 5*calculator.calculatePositionX(Renderer.viewFrom, Renderer.viewTo, data.get(i).get(j).get(0), data.get(i).get(j).get(1), data.get(i).get(j).get(2));
-                double y = 5*calculator.calculatePositionY(Renderer.viewFrom, Renderer.viewTo, data.get(i).get(j).get(0), data.get(i).get(j).get(1), data.get(i).get(j).get(2));
-                x = reposition.repositon_2dX(x);
-                y = reposition.repositon_2dY(y);
+                double x = (double) Renderer.screenDim.width /2+10*calculator.calculatePositionX(Renderer.viewFrom, Renderer.viewTo, data.get(i).get(j).get(0), data.get(i).get(j).get(1), data.get(i).get(j).get(2));
+                double y = (double) Renderer.screenDim.width/2+10*calculator.calculatePositionY(Renderer.viewFrom, Renderer.viewTo, data.get(i).get(j).get(0), data.get(i).get(j).get(1), data.get(i).get(j).get(2));
                 P.addPoint((int)x,(int)y);
             }
             drawPoly.add(P);
@@ -60,12 +61,12 @@ public class threeDObj {
     private void computeDistance(){
         disStorage.clear();
         Layer.clear();
-        for(int i = 0; i< data.size(); i++){
+        for(int i = 0; i< numPoly; i++){
             double totalDis = 0.0;
             for(int j = 0; j<data.get(i).size();j++){
                  totalDis += this.getDistanceP(i,j);
             }
-            disStorage.add(totalDis/data.size());
+            disStorage.add(totalDis/data.get(i).size());
         }
 
         for(int i = 0; i< data.size(); i++){
@@ -73,11 +74,12 @@ public class threeDObj {
         }
 
         Collections.sort(disStorage);
+        Collections.reverse(disStorage);
+
 
         List<Polygon> sortedPolygons = new ArrayList<>();
         for (double distance : disStorage) {
-            int index = Layer.get(distance);
-            sortedPolygons.add(drawPoly.get(index));
+            sortedPolygons.add(drawPoly.get(Layer.get(distance)));
         }
         drawPoly.clear();
         drawPoly.addAll(sortedPolygons);

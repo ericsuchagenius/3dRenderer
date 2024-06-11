@@ -1,4 +1,3 @@
-
 public class calculator {
     static double DrawX = 0, DrawY = 0;
 
@@ -14,13 +13,10 @@ public class calculator {
 
     static void setStuff(double[] ViewFrom, double[] ViewTo, double x, double y, double z) {
         Vector ViewVector = new Vector(ViewTo[0] - ViewFrom[0], ViewTo[1] - ViewFrom[1], ViewTo[2] - ViewFrom[2]);
-        Vector DirectionVector = new Vector(1, 1, 1);
-        Vector PlaneVector1 = ViewVector.CrossProduct(DirectionVector);
-        Vector PlaneVector2 = ViewVector.CrossProduct(PlaneVector1);
 
         Vector RotationVector = GetRotationVector(ViewFrom, ViewTo);
-        Vector WeirdVector1 = ViewVector.CrossProduct(RotationVector);
-        Vector WeirdVector2 = ViewVector.CrossProduct(WeirdVector1);
+        Vector dirVector1 = ViewVector.CrossProduct(RotationVector);
+        Vector dirVector2 = ViewVector.CrossProduct(dirVector1);
 
         Vector ViewToPoint = new Vector(x - ViewFrom[0], y - ViewFrom[1], z - ViewFrom[2]);
 
@@ -33,8 +29,8 @@ public class calculator {
         z = ViewFrom[2] + ViewToPoint.z * t;
 
         if (t >= 0) {
-            DrawX = WeirdVector2.x * x + WeirdVector2.y * y + WeirdVector2.z * z;
-            DrawY = WeirdVector1.x * x + WeirdVector1.y * y + WeirdVector1.z * z;
+            DrawX = dirVector2.x * x + dirVector2.y * y + dirVector2.z * z;
+            DrawY = dirVector1.x * x + dirVector1.y * y + dirVector1.z * z;
         }
     }
 

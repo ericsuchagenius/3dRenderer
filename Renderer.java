@@ -2,10 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Renderer extends JFrame {
-    static double Width = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-    static double Height = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-    static double[] viewFrom = {1, 1, 1.5};
-    static double[] viewTo = {100, 100, 100};
+    static Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
+    static double[] viewFrom = {100,100,100};
+    static double[] viewTo = {1,1,1.5};
     static Double[][][][] initializeData = {{
 //            {{20.0,30.0,50.0},{100.0,20.0,60.0},{70.0,10.0,90.0}}
             {{0.0,0.0,0.0},{20.0,0.0,0.0},{20.0,20.0,0.0},{0.0,20.0,0.0}},
@@ -20,12 +19,15 @@ public class Renderer extends JFrame {
 
     public Renderer() {
         setUndecorated(true);
-        setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setSize(screenDim);
         setVisible(true);
         setLayout(new BorderLayout());
         add(screenObject, BorderLayout.CENTER);
         setFocusable(true);
         addKeyListener(screenObject); // Add key listener to the frame
+
+//        Double[][][] planeData = {{{-40.0,-40.0,0.0},{40.0,-40.0,0.0},{40.0,40.0,0.0},{-40.0,40.0,0.0}}};
+//        screenObject.addObjects(planeData,Color.LIGHT_GRAY);
     }
 
     public static void main(String[] args) {

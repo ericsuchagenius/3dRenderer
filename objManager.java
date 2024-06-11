@@ -3,13 +3,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
-import java.awt.geom.Path2D;
+//import java.awt.geom.Path2D;
 
 import static java.lang.System.currentTimeMillis;
 
 public class objManager extends JPanel implements KeyListener, ActionListener {
     int numObjects = 0;
     List<threeDObj> objects = new ArrayList<>();
+    Boolean[] keyEval = new Boolean[8];
 
     public objManager(Double[][][][] data, Color[] colors) {
         for (int i = 0; i < data.length; i++) {
@@ -18,6 +19,8 @@ public class objManager extends JPanel implements KeyListener, ActionListener {
         setFocusable(true); // Ensure the panel is focusable to receive key events
         addKeyListener(this); // Add key listener to the panel
         numObjects = objects.size();
+
+        Arrays.fill(keyEval, false);// to make every element false for no bugs
     }
 
     public void addObjects(Double[][][] object, Color color){
@@ -26,6 +29,7 @@ public class objManager extends JPanel implements KeyListener, ActionListener {
     }
 
     public void refresh() {
+        control();
         repaint();
     }
 
@@ -51,8 +55,51 @@ public class objManager extends JPanel implements KeyListener, ActionListener {
                 g.fillPolygon(Poly);
             }
         }
-//    drawAxes(g2d);// random axis drawing function
     }
+
+    public void control(){
+        double[] ViewTo = Renderer.viewTo;
+        double[] ViewFrom = Renderer.viewFrom;
+
+        Vector ViewVector = new Vector(ViewTo[0] - ViewFrom[0], ViewTo[1] - ViewFrom[1], ViewTo[2] - ViewFrom[2]);
+        if(keyEval[2]){
+            Renderer.viewTo[0] += ViewVector.x;
+            Renderer.viewTo[1] += ViewVector.y;
+            Renderer.viewTo[2] += ViewVector.z;
+            Renderer.viewFrom[0] += ViewVector.x;
+            Renderer.viewFrom[1] += ViewVector.y;
+            Renderer.viewFrom[2] += ViewVector.z;
+        }
+        if(keyEval[3]){
+            Renderer.viewTo[0] -= ViewVector.x;
+            Renderer.viewTo[1] -= ViewVector.y;
+            Renderer.viewTo[2] -= ViewVector.z;
+            Renderer.viewFrom[0] -= ViewVector.x;
+            Renderer.viewFrom[1] -= ViewVector.y;
+            Renderer.viewFrom[2] -= ViewVector.z;
+        }
+
+        Vector verticalVector = new Vector(0,0,1);
+        Vector sideViewVector = ViewVector.CrossProduct(verticalVector);
+        if(keyEval[1]){
+            Renderer.viewTo[0] += sideViewVector.x;
+            Renderer.viewTo[1] += sideViewVector.y;
+            Renderer.viewTo[2] += sideViewVector.z;
+            Renderer.viewFrom[0] += sideViewVector.x;
+            Renderer.viewFrom[1] += sideViewVector.y;
+            Renderer.viewFrom[2] += sideViewVector.z;
+        }
+        if(keyEval[0]){
+            Renderer.viewTo[0] -= sideViewVector.x;
+            Renderer.viewTo[1] -= sideViewVector.y;
+            Renderer.viewTo[2] -= sideViewVector.z;
+            Renderer.viewFrom[0] -= sideViewVector.x;
+            Renderer.viewFrom[1] -= sideViewVector.y;
+            Renderer.viewFrom[2] -= sideViewVector.z;
+        }
+
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -66,30 +113,57 @@ public class objManager extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-        if (key == KeyEvent.VK_A) {
-            Renderer.viewFrom[0]-=15;
+        if (e.getKeyCode() == KeyEvent.VK_A) {
+            keyEval[0] = true;
         }
-        if (key == KeyEvent.VK_D) {
-            Renderer.viewFrom[0]+=15;
+        if (e.getKeyCode() == KeyEvent.VK_D) {
+            keyEval[1] = true;
         }
-        if (key == KeyEvent.VK_W) {
-            Renderer.viewFrom[1]+=15;
+        if (e.getKeyCode() == KeyEvent.VK_W) {
+            keyEval[2] = true;
         }
-        if (key == KeyEvent.VK_S) {
-            Renderer.viewFrom[1]-=15;
+        if (e.getKeyCode() == KeyEvent.VK_S) {
+            keyEval[3] = true;
         }
-        if (key == KeyEvent.VK_UP) {
-            Renderer.viewFrom[1]+=15;
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            keyEval[4] = true;
         }
-        if (key == KeyEvent.VK_DOWN) {
-            Renderer.viewFrom[1]-=15;
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            keyEval[5] = true;
         }
-        refresh(); // Call refresh to repaint the panel
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            keyEval[6] = true;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            keyEval[7] = true;
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // Not used in this example
+        if (e.getKeyCode() == KeyEvent.VK_A) {
+            keyEval[0] = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_D) {
+            keyEval[1] = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_W) {
+            keyEval[2] = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_S) {
+            keyEval[3] = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            keyEval[4] = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            keyEval[5] = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            keyEval[6] = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            keyEval[7] = false;
+        }
     }
 }
